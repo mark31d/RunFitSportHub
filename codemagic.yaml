@@ -1,0 +1,70 @@
+workflows:
+  ios-workflow:
+    name: Run Fit Sport Hub
+    max_build_duration: 120
+    integrations:
+      app_store_connect: RunFitSportHubAPIKey
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.RunFitSportHub
+      vars:
+        APP_STORE_APPLE_ID: 6749101842
+        XCODE_WORKSPACE: RunFitSportHub.xcworkspace
+        CODE_SCHEME: RunFitSportHub
+    scripts:
+      - name: Install node modules
+        script: |
+          npm install
+
+      - name: Install CocoaPods dependencies
+        script: |
+          cd ios
+          pod install
+
+      - name: Use provisioning profiles
+        script: |
+          cd ios
+          xcode-project use-profiles
+
+      - name: Get BUILD_NUMBER
+        script: |
+          BUILD_NUMBER=$(date +%s)
+          echo "BUILD_NUMBER=$BUILD_NUMBER" >> "$CM_ENV_FILE"
+          echo "BUILD_NUMBER=$BUILD_NUMBER"
+
+      - name: Set CFBundleVersion
+        script: |
+          PLIST_PATH="$CM_BUILD_DIR/ios/BeerGuideforBerlin/Info.plist"
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUMBER" "$PLIST_PATH" 2>/dev/null || \
+          /usr/libexec/PlistBuddy -c "Add :CFBundleVersion string $BUILD_NUMBER" "$PLIST_PATH"
+          /usr/libexec/PlistBuddy -c "Print :CFBundleVersion" "$PLIST_PATH"
+
+      - name: Add ITSAppUsesNonExemptEncryption
+        script: |
+          PLIST_PATH="$CM_BUILD_DIR/ios/BeerGuideforBerlin/Info.plist"
+          /usr/libexec/PlistBuddy -c "Add :ITSAppUsesNonExemptEncryption bool false" "$PLIST_PATH" 2>/dev/null || \
+          /usr/libexec/PlistBuddy -c "Set :ITSAppUsesNonExemptEncryption false" "$PLIST_PATH"
+
+      - name: Build ipa for distribution
+        script: |
+          xcode-project build-ipa \
+            --workspace "$CM_BUILD_DIR/ios/$XCODE_WORKSPACE" \
+            --scheme "$CODE_SCHEME"
+
+      - name: Verify CFBundleVersion in IPA
+        script: |
+          IPA_PATH=$(find build -name "*.ipa" | head -n 1)
+          unzip -p "$IPA_PATH" "Payload/BeerGuideforBerlin.app/Info.plist" | plutil -p - | grep CFBundleVersion || true
+
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_app_store: true
+        copyright: Beer Guide for Berlin 2025
