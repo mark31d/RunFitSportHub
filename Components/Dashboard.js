@@ -189,7 +189,7 @@ export default function Dashboard({ navigation }) {
   ]);
   
   // Используем команды из контекста или демо-команды
-  const displayTeams = teams.length > 0 ? teams : demoTeams;
+  const displayTeams = teams && Array.isArray(teams) && teams.length > 0 ? teams : demoTeams;
 
   // быстрый выбор для предикта
   const teamA = displayTeams[0];
@@ -308,7 +308,7 @@ export default function Dashboard({ navigation }) {
            }
          >
            <FlatList
-             data={displayTeams.slice(0, 5)}
+             data={displayTeams && displayTeams.length > 0 ? displayTeams.slice(0, 5) : []}
              keyExtractor={(item) => item.id}
              ItemSeparatorComponent={() => <View style={styles.sep} />}
              renderItem={({ item }) => (
@@ -320,7 +320,7 @@ export default function Dashboard({ navigation }) {
 
          {/* Mini standings */}
          <Card title="Mini Standings">
-           {displayTeams.slice(0, 4).map((t, i) => (
+           {displayTeams && displayTeams.length > 0 ? displayTeams.slice(0, 4).map((t, i) => (
             <View key={t.id} style={styles.standRow}>
               <Text style={styles.standPos}>{i + 1}</Text>
               <View style={{ flex: 1 }}>
@@ -329,7 +329,11 @@ export default function Dashboard({ navigation }) {
               </View>
               <Text style={styles.standPts}>{Math.round((t.power - 50) * 1.2)}</Text>
             </View>
-          ))}
+          )) : (
+            <Text style={[styles.standName, { color: PALETTE.mut, textAlign: 'center', paddingVertical: 20 }]}>
+              No teams available
+            </Text>
+          )}
         </Card>
 
         <View style={{ height: 24 }} />

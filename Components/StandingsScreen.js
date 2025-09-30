@@ -135,14 +135,14 @@ const alignMap = { left: 'flex-start', center: 'center', right: 'flex-end' };
 
 export default function StandingsScreen({ navigation }) {
   const insets = useSafeAreaInsets();
-  const { teams: contextTeams, updateTeam } = useTeams();
+  const { teams: contextTeams, updateTeam, setTeams } = useTeams();
   const [sport, setSport] = useState('All');
   const [query, setQuery] = useState('');
   const [sortKey, setSortKey] = useState('pts'); // pts | gd | played | wins | draws | losses | name | power | formPts
   const [sortDir, setSortDir] = useState('desc'); // asc | desc
   // Используем команды из контекста напрямую
   const teams = useMemo(() => {
-    if (contextTeams.length > 0) {
+    if (contextTeams && Array.isArray(contextTeams) && contextTeams.length > 0) {
       return contextTeams.map(team => tableRow({
         ...team,
         sport: pick(SPORTS),
@@ -168,7 +168,8 @@ export default function StandingsScreen({ navigation }) {
   };
 
   const refresh = () => {
-    setTeams(Array.from({ length: 14 }, () => tableRow(makeTeam())));
+    const newTeams = Array.from({ length: 14 }, () => tableRow(makeTeam()));
+    setTeams(newTeams);
   };
 
   const simulate = () => {
@@ -176,17 +177,19 @@ export default function StandingsScreen({ navigation }) {
       const updated = prev.map(simulateRound);
       
       // Обновляем команды в контексте, если они там есть
-      updated.forEach(team => {
-        const contextTeam = contextTeams.find(t => t.id === team.id);
-        if (contextTeam) {
-          updateTeam(team.id, {
-            form: team.form,
-            power: team.power,
-            scored: team.gf,
-            conceded: team.ga,
-          });
-        }
-      });
+      if (contextTeams && Array.isArray(contextTeams)) {
+        updated.forEach(team => {
+          const contextTeam = contextTeams.find(t => t.id === team.id);
+          if (contextTeam) {
+            updateTeam(team.id, {
+              form: team.form,
+              power: team.power,
+              scored: team.gf,
+              conceded: team.ga,
+            });
+          }
+        });
+      }
       
       return updated;
     });

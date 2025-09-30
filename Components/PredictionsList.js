@@ -209,8 +209,8 @@ export default function PredictionsList({ navigation }) {
       {/* Filters */}
       <View style={styles.header}>
         <Text style={styles.title}>Predictions</Text>
-        <Pressable style={styles.btnGhost} onPress={refresh}>
-          <Text style={styles.ghostText}>Refresh</Text>
+        <Pressable style={styles.refreshBtn} onPress={refresh}>
+          <Text style={styles.refreshText}>Refresh</Text>
         </Pressable>
       </View>
 
@@ -321,6 +321,20 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: PALETTE.bg },
   header: { paddingHorizontal: 16, paddingTop: 12, flexDirection: 'row', alignItems: 'center', gap: 10 },
   title: { color: PALETTE.text, fontSize: 20, fontWeight: '800', flex: 1, letterSpacing: 0.2 },
+
+  refreshBtn: {
+    backgroundColor: PALETTE.primary,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(124,92,255,0.3)',
+  },
+  refreshText: { 
+    color: '#08131A', 
+    fontWeight: '800', 
+    fontSize: 14,
+  },
 
   row: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 16, marginTop: 10 },
 
