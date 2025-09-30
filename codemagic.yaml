@@ -9,7 +9,7 @@ workflows:
         distribution_type: app_store
         bundle_identifier: com.RunFitSportHub
       vars:
-        APP_STORE_APPLE_ID: 6749101842
+        APP_STORE_APPLE_ID: 6753205474
         XCODE_WORKSPACE: RunFitSportHub.xcworkspace
         CODE_SCHEME: RunFitSportHub
     scripts:
@@ -67,4 +67,4 @@ workflows:
       app_store_connect:
         auth: integration
         submit_to_app_store: true
-        copyright: Beer Guide for Berlin 2025
+        copyright: Run Fit Sport Hub 2025
