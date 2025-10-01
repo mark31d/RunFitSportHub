@@ -84,6 +84,30 @@ export default function ProfileScreen({ route, navigation }) {
     setIsSaved(false);
   };
 
+  const onDeleteProfile = () => {
+    Alert.alert(
+      'Delete Profile',
+      'Are you sure you want to delete your profile? This will reset your profile data to default values. This action cannot be undone.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: () => {
+            // Сбрасываем профиль к значениям по умолчанию
+            setAvatar(null);
+            setName('Player One');
+            setBio('Collector of legendary squads.');
+            setSport('Football');
+            setPrivateAcc(false);
+            setIsSaved(false);
+            Alert.alert('Profile Deleted', 'Your profile has been reset to default values.');
+          },
+        },
+      ],
+    );
+  };
+
   const onResetData = () => {
     Alert.alert(
       'Reset Data',
@@ -198,8 +222,8 @@ export default function ProfileScreen({ route, navigation }) {
               onToggle={() => setPrivateAcc((v) => !v)}
             />
             <View style={{ height: 12 }} />
-            <Pressable style={styles.btnDanger} onPress={() => Alert.alert('Sign out', 'Mock: sign-out')}>
-              <Text style={styles.btnDarkText}>Sign out</Text>
+            <Pressable style={styles.btnDanger} onPress={onDeleteProfile}>
+              <Text style={styles.btnDarkText}>Delete Profile</Text>
             </Pressable>
           </View>
         </>
@@ -248,8 +272,8 @@ export default function ProfileScreen({ route, navigation }) {
               <Text style={styles.btnEditText}>Edit</Text>
             </Pressable>
             <View style={{ height: 12 }} />
-            <Pressable style={styles.btnSignOut} onPress={() => Alert.alert('Sign out', 'Mock: sign-out')}>
-              <Text style={styles.btnSignOutText}>Sign out</Text>
+            <Pressable style={styles.btnSignOut} onPress={onDeleteProfile}>
+              <Text style={styles.btnSignOutText}>Delete Profile</Text>
             </Pressable>
             <View style={{ height: 12 }} />
             <Pressable style={styles.btnReset} onPress={onResetData}>
@@ -337,40 +361,40 @@ const styles = StyleSheet.create({
 
   btnPrimary: {
     backgroundColor: PALETTE.primary,
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    marginRight: 8,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    marginRight: 6,
   },
   btnOutline: {
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
     borderWidth: 1,
     borderColor: PALETTE.line,
     backgroundColor: 'rgba(255,255,255,0.04)',
   },
   btnDanger: {
     backgroundColor: PALETTE.danger,
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
     alignSelf: 'flex-start',
   },
   btnText: { color: PALETTE.text, fontWeight: '800' },
   btnDarkText: { color: '#08131A', fontWeight: '800' },
   btnGhost: {
     backgroundColor: PALETTE.accent,
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 10,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
     shadowColor: PALETTE.accent,
     shadowOpacity: 0.3,
-    shadowRadius: 8,
+    shadowRadius: 6,
     shadowOffset: { width: 0, height: 2 },
-    elevation: 4,
+    elevation: 3,
   },
-  ghostText: { color: '#08131A', fontWeight: '800', fontSize: 14 },
+  ghostText: { color: '#08131A', fontWeight: '800', fontSize: 12 },
 
   hint: { color: PALETTE.mut, fontSize: 11, marginTop: 6 },
 
@@ -485,74 +509,74 @@ const styles = StyleSheet.create({
   },
   btnSave: {
     backgroundColor: PALETTE.accent,
-    borderRadius: 12,
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    minWidth: 100,
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    minWidth: 80,
     alignItems: 'center',
     shadowColor: PALETTE.accent,
     shadowOpacity: 0.3,
-    shadowRadius: 8,
+    shadowRadius: 6,
     shadowOffset: { width: 0, height: 2 },
-    elevation: 4,
+    elevation: 3,
   },
   btnSaveText: {
     color: '#08131A',
     fontWeight: '800',
-    fontSize: 14,
+    fontSize: 12,
   },
   btnEdit: {
     backgroundColor: PALETTE.primary,
-    borderRadius: 12,
-    paddingHorizontal: 24,
-    paddingVertical: 16,
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
     width: '100%',
     alignItems: 'center',
     shadowColor: PALETTE.primary,
     shadowOpacity: 0.3,
-    shadowRadius: 8,
+    shadowRadius: 6,
     shadowOffset: { width: 0, height: 2 },
-    elevation: 4,
+    elevation: 3,
   },
   btnEditText: {
     color: '#FFFFFF',
-    fontWeight: '900',
-    fontSize: 16,
+    fontWeight: '800',
+    fontSize: 14,
   },
   btnSignOut: {
     backgroundColor: PALETTE.danger,
-    borderRadius: 12,
-    paddingHorizontal: 24,
-    paddingVertical: 16,
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
     width: '100%',
     alignItems: 'center',
     shadowColor: PALETTE.danger,
     shadowOpacity: 0.3,
-    shadowRadius: 8,
+    shadowRadius: 6,
     shadowOffset: { width: 0, height: 2 },
-    elevation: 4,
+    elevation: 3,
   },
   btnSignOutText: {
     color: '#FFFFFF',
-    fontWeight: '900',
-    fontSize: 16,
+    fontWeight: '800',
+    fontSize: 14,
   },
   btnReset: {
     backgroundColor: PALETTE.warn,
-    borderRadius: 12,
-    paddingHorizontal: 24,
-    paddingVertical: 16,
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
     width: '100%',
     alignItems: 'center',
     shadowColor: PALETTE.warn,
     shadowOpacity: 0.3,
-    shadowRadius: 8,
+    shadowRadius: 6,
     shadowOffset: { width: 0, height: 2 },
-    elevation: 4,
+    elevation: 3,
   },
   btnResetText: {
     color: '#FFFFFF',
-    fontWeight: '900',
-    fontSize: 16,
+    fontWeight: '800',
+    fontSize: 14,
   },
 });
